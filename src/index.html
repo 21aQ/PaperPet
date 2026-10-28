@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>纸读 PaperPet</title>
+    <link rel="stylesheet" href="vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg class="svg-defs" aria-hidden="true">
+      <defs>
+        <symbol id="pet-full" viewBox="0 0 120 120">
+          <g class="pet-float">
+            <path
+              class="pet-body"
+              d="M31 58c0-18 12-31 29-31s29 13 29 31v24c0 13-12 22-29 22s-29-9-29-22V58Z"
+            />
+            <path class="pet-ear pet-ear-l" d="M37 39c-4-15 2-21 13-13l4 8-17 5Z" />
+            <path class="pet-ear pet-ear-r" d="M83 39c4-15-2-21-13-13l-4 8 17 5Z" />
+            <path class="pet-fold" d="M82 29c8 6 10 15 9 26" />
+            <g class="pet-face">
+              <circle class="pet-cheek" cx="40" cy="73" r="5.5" />
+              <circle class="pet-cheek" cx="80" cy="73" r="5.5" />
+              <g class="pet-eyes">
+                <ellipse class="pet-eye" cx="50" cy="61" rx="2.4" ry="3.2" />
+                <ellipse class="pet-eye" cx="70" cy="61" rx="2.4" ry="3.2" />
+              </g>
+              <g class="pet-glasses">
+                <circle cx="50" cy="61" r="9.2" />
+                <circle cx="70" cy="61" r="9.2" />
+                <path d="M59.2 61h1.6M40.8 60l-6-1.5M79.2 60l6-1.5" />
+              </g>
+              <path class="pet-smile" d="M56 74c1.4 2 6.6 2 8 0" />
+            </g>
+            <g class="pet-book">
+              <path d="M47 91c4-2 9-2 13 0 4-2 9-2 13 0v9c-4-2-9-2-13 0-4-2-9-2-13 0v-9Z" />
+              <path d="M60 91v9" />
+            </g>
+            <path class="pet-spark" d="M96 40l1.3 4.2 4.2 1.3-4.2 1.3L96 51l-1.3-4.2-4.2-1.3 4.2-1.3L96 40Z" />
+          </g>
+        </symbol>
+
+        <symbol id="i-pin" viewBox="0 0 24 24">
+          <path d="m14 4 6 6-3 1-4 4-1 5-2-2-4 4-1-1 4-4-2-2 5-1 4-4 1-3Z" />
+        </symbol>
+        <symbol id="i-collapse" viewBox="0 0 24 24">
+          <path d="M5 12h14" />
+        </symbol>
+        <symbol id="i-settings" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21h-4v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3v-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5V3h4v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.1v4h-.1a1.7 1.7 0 0 0-1.5 1Z" />
+        </symbol>
+        <symbol id="i-close" viewBox="0 0 24 24">
+          <path d="m6 6 12 12M18 6 6 18" />
+        </symbol>
+        <symbol id="i-send" viewBox="0 0 24 24">
+          <path d="M4 11.5 20 4l-7.5 16-2.3-6.2L4 11.5Z" />
+        </symbol>
+        <symbol id="i-stop" viewBox="0 0 24 24">
+          <rect x="7" y="7" width="10" height="10" rx="2" />
+        </symbol>
+        <symbol id="i-spark" viewBox="0 0 24 24">
+          <path d="m12 3 1.8 6.2L20 11l-6.2 1.8L12 19l-1.8-6.2L4 11l6.2-1.8L12 3Z" />
+        </symbol>
+        <symbol id="i-quote" viewBox="0 0 24 24">
+          <path d="M7 7h4v5c0 3-2 4-4 5M14 7h4v5c0 3-2 4-4 5" />
+        </symbol>
+        <symbol id="i-refresh" viewBox="0 0 24 24">
+          <path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6" />
+        </symbol>
+        <symbol id="i-book" viewBox="0 0 24 24">
+          <path d="M4 5.5c3-1.2 5.5-.7 8 1 2.5-1.7 5-2.2 8-1V19c-3-1.2-5.5-.7-8 1-2.5-1.7-5-2.2-8-1V5.5ZM12 6.5V20" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+          <path d="m5 12 4 4L19 6" />
+        </symbol>
+        <symbol id="i-key" viewBox="0 0 24 24">
+          <circle cx="8" cy="15" r="4" />
+          <path d="m11 12 8-8M16 4l4 4M14 6l2 2" />
+        </symbol>
+        <symbol id="i-expand" viewBox="0 0 24 24">
+          <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" />
+        </symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24">
+          <rect x="8" y="8" width="12" height="12" rx="2" />
+          <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+        </symbol>
+        <symbol id="i-image" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="16" rx="3" />
+          <circle cx="8.5" cy="9" r="1.6" />
+          <path d="m4 17 5-5 4 4 2-2 5 5" />
+        </symbol>
+        <symbol id="i-chevron" viewBox="0 0 24 24">
+          <path d="m6 9 6 6 6-6" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div id="app" class="app is-collapsed">
+      <div class="window" aria-hidden="false">
+        <header class="titlebar">
+          <div class="brand">
+            <span class="brand-mark"><svg viewBox="0 0 24 24"><use href="#i-book" /></svg></span>
+            <span class="brand-name">纸读</span>
+            <span class="brand-latin">PAPERPET</span>
+          </div>
+          <div class="window-actions">
+            <button id="btnPin" class="icon-btn" title="置顶" aria-label="置顶">
+              <svg viewBox="0 0 24 24"><use href="#i-pin" /></svg>
+            </button>
+            <button id="btnCollapse" class="icon-btn" title="收成桌宠" aria-label="收成桌宠">
+              <svg viewBox="0 0 24 24"><use href="#i-collapse" /></svg>
+            </button>
+            <button id="btnSettings" class="icon-btn" title="设置" aria-label="设置">
+              <svg viewBox="0 0 24 24"><use href="#i-settings" /></svg>
+            </button>
+            <button id="btnHide" class="icon-btn" title="隐藏到托盘" aria-label="隐藏到托盘">
+              <svg viewBox="0 0 24 24"><use href="#i-close" /></svg>
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <section id="paperCard" class="paper-card">
+            <div class="paper-topline">
+              <span id="paperStatus" class="eyebrow">正在读 · ZOTERO</span>
+              <span id="paperPages" class="paper-pages"></span>
+            </div>
+            <div class="paper-body">
+              <div class="paper-copy">
+                <h1 id="paperTitle" class="paper-title">正在寻找你打开的论文…</h1>
+                <div id="paperMeta" class="paper-meta">打开 Zotero 里的 PDF，我会自动跟过来</div>
+              </div>
+              <div class="paper-pet" aria-hidden="true">
+                <svg viewBox="0 0 120 120"><use href="#pet-full" /></svg>
+              </div>
+            </div>
+            <div class="paper-foot">
+              <div id="paperChips" class="paper-chips"></div>
+              <button id="btnRefreshPaper" class="mini-refresh" title="重新检测 Zotero">
+                <svg viewBox="0 0 24 24"><use href="#i-refresh" /></svg>
+              </button>
+            </div>
+            <div id="paperEmpty" class="paper-empty" hidden>
+              <div class="paper-empty-title">还没找到正在读的论文</div>
+              <div class="paper-empty-sub">在 Zotero 打开 PDF；若没反应，先安装桥接插件。</div>
+              <div class="paper-empty-actions">
+                <button id="btnInstallBridge" class="ghost-btn">安装桥接</button>
+                <button id="btnBridgeHelp" class="text-btn">怎么装？</button>
+              </div>
+            </div>
+          </section>
+
+          <div id="chatScroll" class="chat-scroll">
+            <div id="chatList" class="chat-list" role="log" aria-live="polite"></div>
+            <div id="thinkingBar" class="thinking-bar" hidden>
+              <span class="think-dots"><i></i><i></i><i></i></span>
+              <span id="thinkingText">正在翻论文…</span>
+            </div>
+          </div>
+
+          <div class="composer">
+            <div id="imageBar" class="image-bar" hidden>
+              <div class="image-thumb-wrap">
+                <img id="imageThumb" class="image-thumb" alt="待解读的截图" />
+                <span id="imageSize" class="image-size"></span>
+              </div>
+              <div class="image-copy">
+                <b>截图已就绪</b>
+                <span>会先转写公式，再解释</span>
+              </div>
+              <button id="imageRemove" class="image-remove" title="移除截图" aria-label="移除截图">
+                <svg viewBox="0 0 24 24"><use href="#i-close" /></svg>
+              </button>
+            </div>
+
+            <div id="selectionBar" class="selection-bar" hidden>
+              <button id="selectionToggle" class="selection-main">
+                <span class="selection-icon"><svg viewBox="0 0 24 24"><use href="#i-quote" /></svg></span>
+                <span class="selection-text">
+                  <b id="selectionPage">p.2 选段</b>
+                  <span id="selectionPreview">…</span>
+                </span>
+                <svg class="selection-chevron" viewBox="0 0 24 24"><use href="#i-chevron" /></svg>
+              </button>
+              <button id="selectionRemove" class="selection-remove" title="不带这段" aria-label="不带这段">
+                <svg viewBox="0 0 24 24"><use href="#i-close" /></svg>
+              </button>
+            </div>
+
+            <div id="quickRow" class="quick-row">
+              <button id="quickScreenshot" class="quick-chip screenshot-chip"><span>解读截图</span></button>
+              <button class="quick-chip" data-mode="explain"><span>解释选段</span></button>
+              <button class="quick-chip" data-mode="derive"><span>展开推导</span></button>
+              <button class="quick-chip" data-mode="symbol"><span>查记号</span></button>
+              <button class="quick-chip" data-mode="intuition"><span>给直觉</span></button>
+              <button class="quick-chip" data-mode="quiz"><span>考考我</span></button>
+              <button class="quick-chip" data-mode="summary"><span>本节总结</span></button>
+            </div>
+
+            <div class="composer-shell">
+              <button id="btnImage" class="image-btn" title="读取剪贴板截图（Win+Shift+S）" aria-label="读取剪贴板截图">
+                <svg viewBox="0 0 24 24"><use href="#i-image" /></svg>
+              </button>
+              <textarea
+                id="input"
+                rows="1"
+                maxlength="6000"
+                placeholder="问这篇论文… 例如：这一步为什么成立？"
+                aria-label="向 PaperPet 提问"
+              ></textarea>
+              <button id="btnSend" class="send-btn" title="发送" aria-label="发送">
+                <svg viewBox="0 0 24 24"><use href="#i-send" /></svg>
+              </button>
+            </div>
+            <div class="composer-foot">
+              <span id="connection" class="connection"><i class="status-dot"></i><span>正在连接 Zotero…</span></span>
+              <span class="foot-hint"><kbd>Enter</kbd> 发送 · <kbd>Esc</kbd> 停止</span>
+            </div>
+          </div>
+        </main>
+
+        <div class="resize-handle rh-n" data-edge="n"></div>
+        <div class="resize-handle rh-s" data-edge="s"></div>
+        <div class="resize-handle rh-e" data-edge="e"></div>
+        <div class="resize-handle rh-w" data-edge="w"></div>
+        <div class="resize-handle rh-ne" data-edge="ne"></div>
+        <div class="resize-handle rh-nw" data-edge="nw"></div>
+        <div class="resize-handle rh-se" data-edge="se"></div>
+        <div class="resize-handle rh-sw" data-edge="sw"></div>
+      </div>
+
+      <div class="pet-stage" aria-hidden="true">
+        <div class="pet-drag-zone">
+          <div class="pet-halo"></div>
+          <svg class="pet-big" viewBox="0 0 120 120"><use href="#pet-full" /></svg>
+          <div class="pet-think"><i></i><i></i><i></i></div>
+        </div>
+        <button id="petBubble" class="pet-bubble" aria-label="展开纸读">
+          <span id="petLine">读到哪了？</span>
+          <span class="pet-bubble-cta">点我一起读 <svg viewBox="0 0 24 24"><use href="#i-arrow" /></svg></span>
+        </button>
+        <div class="pet-status"><i class="status-dot"></i><span id="petStatusText">Zotero · 连接中</span></div>
+      </div>
+    </div>
+
+    <div id="settings" class="settings" hidden>
+      <div class="settings-backdrop"></div>
+      <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <header class="settings-head">
+          <div>
+            <div class="settings-kicker">PAPERPET</div>
+            <h2 id="settingsTitle">设置</h2>
+          </div>
+          <button id="btnCloseSettings" class="icon-btn" aria-label="关闭设置">
+            <svg viewBox="0 0 24 24"><use href="#i-close" /></svg>
+          </button>
+        </header>
+
+        <div class="settings-scroll">
+          <section class="setting-group">
+            <div class="setting-title"><span>模型连接</span><span id="keyState" class="setting-badge">未配置</span></div>
+            <label class="field">
+              <span>Base URL</span>
+              <input id="cfgBaseUrl" type="text" spellcheck="false" placeholder="https://api.deepseek.com" />
+            </label>
+            <label class="field">
+              <span>API Key</span>
+              <div class="key-row">
+                <input id="cfgApiKey" type="password" spellcheck="false" placeholder="sk-…（只保存在本机）" />
+                <button id="btnRevealKey" class="field-btn" type="button">显示</button>
+              </div>
+              <small id="keyHint">使用系统级加密保存（Windows DPAPI）。也可设置环境变量 DEEPSEEK_API_KEY。</small>
+              <button id="btnGetKey" class="key-link" type="button">没有 Key？去 DeepSeek 申请 →</button>
+            </label>
+            <label class="field">
+              <span>模型</span>
+              <div class="model-row">
+                <input id="cfgModel" type="text" spellcheck="false" list="modelList" placeholder="deepseek-chat" />
+                <button id="btnModels" class="field-btn" type="button">拉取</button>
+              </div>
+              <datalist id="modelList"></datalist>
+            </label>
+            <label class="field">
+              <span>截图 / 图片理解模型</span>
+              <input id="cfgVisionModel" type="text" spellcheck="false" list="modelList" placeholder="留空则使用上面的模型（需支持图片输入）" />
+              <small>截图解读需要支持 vision 的模型；例如 deepseek-flash、gpt-4o 或你网关里的视觉模型。</small>
+            </label>
+            <div class="test-row">
+              <button id="btnTest" class="ghost-btn">测试连接</button>
+              <span id="testResult" class="test-result">填好 Key 后测一下</span>
+            </div>
+          </section>
+
+          <section class="setting-group">
+            <div class="setting-title"><span>阅读上下文</span><span class="setting-note">决定回答能看到多少</span></div>
+            <div class="segmented" id="contextMode">
+              <button data-value="smart" class="seg-btn">
+                <b>智能</b><span>摘要 + 检索 5 段</span>
+              </button>
+              <button data-value="full" class="seg-btn">
+                <b>全文</b><span>整篇塞进上下文</span>
+              </button>
+              <button data-value="selection" class="seg-btn">
+                <b>仅选段</b><span>最省 / 最私密</span>
+              </button>
+            </div>
+            <label class="field compact">
+              <span>上下文预算</span>
+              <select id="cfgContextChars">
+                <option value="24000">约 8k tokens · 省</option>
+                <option value="60000">约 20k tokens · 推荐</option>
+                <option value="120000">约 40k tokens · 长文</option>
+                <option value="240000">约 80k tokens · 超大</option>
+              </select>
+            </label>
+            <label class="switch-row">
+              <span><b>显示思考过程</b><small>推理模型的 reasoning 默认折叠</small></span>
+              <input id="cfgShowReasoning" type="checkbox" class="switch" />
+            </label>
+          </section>
+
+          <section class="setting-group">
+            <div class="setting-title"><span>桌宠行为</span><span class="setting-note">浮在所有窗口之上</span></div>
+            <label class="switch-row">
+              <span><b>始终置顶</b><small>阅读时保持在 PDF 旁边</small></span>
+              <input id="cfgAlwaysOnTop" type="checkbox" class="switch" />
+            </label>
+            <label class="switch-row">
+              <span><b>开机启动</b><small>仅打包版生效</small></span>
+              <input id="cfgAutoLaunch" type="checkbox" class="switch" />
+            </label>
+            <label class="field compact">
+              <span>主题</span>
+              <select id="cfgTheme">
+                <option value="system">跟随系统</option>
+                <option value="light">纸感浅色</option>
+                <option value="dark">夜读深色</option>
+              </select>
+            </label>
+            <div class="shortcut-row">
+              <span>显示 / 隐藏</span>
+              <kbd id="cfgShortcut">Ctrl+Alt+P</kbd>
+            </div>
+          </section>
+
+          <section class="setting-group">
+            <div class="setting-title"><span>Zotero 桥接</span><span id="bridgeBadge" class="setting-badge">检测中</span></div>
+            <p class="setting-copy">
+              「纸读」通过一个轻量 Zotero 插件读取当前打开的 PDF、选段、页码和高亮。插件只在本机写一个
+              <code>context.json</code>，不联网。Zotero 关闭时可一键写入；Zotero 运行时请点“打开插件文件”，
+              在 <b>工具 → 插件 → 齿轮 → Install Plugin From File…</b> 里选择它。
+            </p>
+            <div class="setting-actions">
+              <button id="btnInstallPlugin" class="primary-btn small">一键安装 / 更新</button>
+              <button id="btnRevealPlugin" class="text-btn">打开插件文件</button>
+              <button id="btnOpenBridge" class="text-btn">打开数据目录</button>
+            </div>
+            <div id="pluginPath" class="path-box">正在查找插件…</div>
+          </section>
+
+          <section class="setting-group">
+            <div class="setting-title"><span>隐私与数据</span></div>
+            <p class="setting-copy">
+              只有你主动提问时，当前论文的相关上下文才会发送到你配置的模型接口。API Key
+              不会进入对话或日志。对话按论文分别保存在本机。
+            </p>
+            <div class="setting-actions">
+              <button id="btnClearHistory" class="text-btn danger">清空本篇对话</button>
+              <button id="btnOpenData" class="text-btn">打开数据目录</button>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="settings-footer">
+          <button id="btnQuit" class="text-btn danger">退出纸读</button>
+          <button id="btnSaveSettings" class="primary-btn">保存设置</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="vendor/marked.umd.js"></script>
+    <script src="vendor/purify.min.js"></script>
+    <script src="vendor/katex/katex.min.js"></script>
+    <script src="vendor/katex/auto-render.min.js"></script>
+    <script src="renderer.js"></script>
+  </body>
+</html>

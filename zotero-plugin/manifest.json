@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "PaperPet Bridge",
+  "version": "1.0.0",
+  "description": "Tells the PaperPet desktop pet which paper you are reading in Zotero.",
+  "homepage_url": "https://local.paperpet",
+  "author": "PaperPet",
+  "icons": {
+    "48": "icon.png",
+    "96": "icon.png"
+  },
+  "applications": {
+    "zotero": {
+      "id": "paperpet@local",
+      "strict_min_version": "7.0",
+      "strict_max_version": "10.0.*"
+    }
+  }
+}

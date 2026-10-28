@@ -1,0 +1,49 @@
+{
+  "name": "paperpet",
+  "productName": "纸读 PaperPet",
+  "version": "1.0.0",
+  "description": "A Zotero desktop-pet paper reading assistant with full-text context, formula screenshots and LaTeX explanations.",
+  "main": "electron/main.js",
+  "author": "21aQ",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/21aQ/PaperPet.git"
+  },
+  "homepage": "https://github.com/21aQ/PaperPet",
+  "bugs": {
+    "url": "https://github.com/21aQ/PaperPet/issues"
+  },
+  "keywords": [
+    "zotero",
+    "electron",
+    "paper-reading",
+    "desktop-pet",
+    "deepseek",
+    "llm",
+    "latex",
+    "research-assistant"
+  ],
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "demo": "electron . --no-sandbox --demo",
+    "shot": "electron . --no-sandbox --demo --screenshot",
+    "build:plugin": "node scripts/build-plugin.mjs",
+    "package": "node scripts/package.mjs",
+    "test:context": "node --test test/context.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dompurify": "^3.2.6",
+    "katex": "^0.16.22",
+    "marked": "^15.0.12"
+  },
+  "devDependencies": {
+    "@electron/packager": "^18.3.6",
+    "electron": "^37.2.0",
+    "jszip": "^3.10.2"
+  }
+}
