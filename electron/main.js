@@ -1150,7 +1150,7 @@ function extensionEntry(profileDir, xpi) {
     sourceURI: fileUri,
     releaseNotesURI: null,
     softDisabled: false,
-    foreignInstall: true,
+    foreignInstall: false,
     strictCompatibility: true,
     locales: [],
     targetApplications: [

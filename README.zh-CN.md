@@ -217,6 +217,7 @@ paperpet/
 | 论文卡空白 / “还没打开论文” | 在 Zotero 里双击 PDF，让 reader 标签页成为当前标签；等 2 秒 |
 | 选段不出现 | 在 PDF 文本上双击或拖选；扫描版 PDF 没有文本层，无法选段 |
 | 安装后 Zotero 没反应 | 完全退出 Zotero 再打开；工具 → 插件 里确认 PaperPet Bridge 已启用 |
+| Zotero 更新后桥接消失 | Zotero 更新可能清掉侧载插件。退出 Zotero，在纸读设置里点“一键安装 / 更新”，再打开 Zotero；或在“工具 → 插件”里重装 `prebuilt/paperpet-bridge.xpi` |
 | 401 / 402 | Key 无效或余额不足；设置里点“测试连接” |
 | 404 / 模型不存在 | Base URL 是否多了/少了 `/v1`；点“拉取”看模型名 |
 | 发送后没反应 | 看设置里 Base URL 是否可达；代理/防火墙；换 `deepseek-chat` |

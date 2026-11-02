@@ -186,6 +186,7 @@ node scripts/mock-llm.js       # http://127.0.0.1:23333/v1
 | Empty paper card | Open the PDF and make its reader tab active; wait 2 seconds |
 | No selection chip | Select text in the PDF text layer; scanned PDFs without OCR have no selectable text |
 | Plugin not loading | Fully quit and reopen Zotero; confirm PaperPet Bridge is enabled under Tools → Plugins |
+| Bridge disappeared after a Zotero update | Zotero updates can remove sideloaded plugins. Quit Zotero, open PaperPet **Settings → Install/update bridge**, then reopen Zotero; or reinstall `prebuilt/paperpet-bridge.xpi` from Tools → Plugins |
 | 401 / 402 | Invalid key or insufficient balance; use **Test connection** |
 | 404 / model not found | Check `/v1` in the Base URL; use **Fetch models** |
 | Image request fails | Set a vision-capable **Screenshot / vision model** |
