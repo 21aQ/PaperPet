@@ -34,6 +34,7 @@ PaperPet turns that into a compact context window and sends it to DeepSeek or an
 - **Resizable panel with proportional type.** Drag any edge or corner (360×520 to 760×1000). Font size scales with the window from about 0.9× to 1.35×, and the size is remembered.
 - **Streaming LaTeX answers.** Markdown + KaTeX render while the answer streams. Reasoning tokens can be shown in a collapsible block.
 - **Per-paper history.** Conversations are stored by paper and restored when you switch back.
+- **Export conversations.** The title-bar export button saves the current paper's Q&A as Markdown or JSON, or copies Markdown to the clipboard. Exported Markdown includes paper metadata and turn numbers, so you can hand it to another agent for summarization or analysis. Image data is not embedded; turns with screenshots are marked.
 - **Desktop-pet behavior.** Transparent, frameless, always-on-top, draggable, tray icon, global `Ctrl+Alt+P` show/hide, collapse into a small pet.
 - **Privacy controls.** The API key is encrypted with Windows DPAPI; the Zotero plugin only writes local JSON and never makes network requests. Choose **Smart / Full text / Selection only** context modes.
 
@@ -87,9 +88,22 @@ pnpm demo           # demo data, no API key or Zotero needed
 | Understand a lost formula | `Win+Shift+S` around the formula → `Ctrl+V` in PaperPet → send |
 | Get intuition | Click **Intuition**, or just ask; complex formulas get an example proactively |
 | Test myself | Click **Quiz me**; questions come first, answers below |
+| Take the chat elsewhere | Click the export icon in the title bar → **Markdown** / **JSON** / **Copy Markdown** (`Ctrl+Shift+E`) |
 | Read a different paper | Open another PDF in Zotero; the conversation switches automatically |
 | Make the text larger | Drag any window edge/corner; type scales with the window |
 | Hide the pet | Click `×`, use the tray icon, or press `Ctrl+Alt+P` |
+
+### Exporting a conversation
+
+Click the download icon in the title bar (or press `Ctrl+Shift+E`):
+
+- **Markdown file** — front matter with paper title/authors/year/DOI, then numbered `User` / `PaperPet` turns. Best for pasting into another agent for summary, critique, or further analysis.
+- **JSON file** — `paperpet.conversation/v1` schema with message roles, timestamps, context metadata, and reasoning when available.
+- **Copy Markdown** — puts the same Markdown on the clipboard.
+
+Screenshot image data is intentionally not exported (it would bloat the file and is not useful to most text agents); a turn that had a screenshot is marked. Export covers the conversation of the currently open paper.
+
+![Export menu](docs/screenshot-export.png)
 
 ## Configuration
 
@@ -159,7 +173,7 @@ paperpet/
 
 ```bash
 node scripts/sync-vendor.mjs   # marked / DOMPurify / KaTeX
-pnpm test:context              # 8 unit tests
+pnpm test                      # 11 unit tests
 pnpm build:plugin              # dist/paperpet-bridge.xpi
 node scripts/package.mjs       # Windows portable build
 ```

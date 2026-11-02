@@ -14,6 +14,7 @@ const {
   screen,
   shell,
   clipboard,
+  dialog,
   globalShortcut,
   nativeTheme,
 } = require("electron");
@@ -21,6 +22,7 @@ const {
 const configStore = require("./config");
 const { ZoteroBridge } = require("./zotero-bridge");
 const history = require("./history");
+const { buildMarkdown, buildJson, safeFilename } = require("./exporter");
 const {
   splitPages,
   detectHeadings,
@@ -390,6 +392,8 @@ function createWindow() {
       setTimeout(() => captureScreenshots(), 1600);
     } else if (argv.includes("--autotest-image")) {
       setTimeout(() => runAutoImageTest(), 1200);
+    } else if (argv.includes("--autotest-export")) {
+      setTimeout(() => runAutoExportTest(), 1200);
     } else if (argv.includes("--autotest")) {
       setTimeout(() => runAutoTest(), 1200);
     }
@@ -733,6 +737,49 @@ function registerIpc() {
         userData: app.getPath("userData"),
       },
     };
+  });
+
+  ipcMain.handle("conversation:export", async (event, payload = {}) => {
+    const format = payload.format === "json" ? "json" : "markdown";
+    const paper = payload.paper && typeof payload.paper === "object" ? payload.paper : null;
+    const messages = Array.isArray(payload.messages) ? payload.messages : [];
+    const content =
+      format === "json"
+        ? buildJson({ paper, messages })
+        : buildMarkdown({ paper, messages });
+    if (payload.copy === true) {
+      clipboard.writeText(content);
+      return { ok: true, copied: true, format, characters: content.length };
+    }
+    const extension = format === "json" ? "json" : "md";
+    const rawName =
+      String(payload.defaultName || "").trim() ||
+      `PaperPet-${paper?.title || "conversation"}-${new Date().toISOString().slice(0, 10)}.${extension}`;
+    const defaultName = safeFilename(rawName.replace(/\.(md|json)$/i, ""), extension);
+    let defaultPath = defaultName;
+    try {
+      defaultPath = path.join(app.getPath("documents"), defaultName);
+    } catch (error) {
+      defaultPath = path.join(app.getPath("downloads"), defaultName);
+    }
+    const result = await dialog.showSaveDialog(mainWindow, {
+      title: "导出对话 / Export conversation",
+      defaultPath,
+      filters:
+        format === "json"
+          ? [{ name: "JSON", extensions: ["json"] }]
+          : [{ name: "Markdown", extensions: ["md"] }],
+    });
+    if (result.canceled || !result.filePath) return { ok: false, canceled: true };
+    const filePath = result.filePath.toLowerCase().endsWith(`.${extension}`)
+      ? result.filePath
+      : `${result.filePath}.${extension}`;
+    try {
+      fs.writeFileSync(filePath, content, "utf8");
+      return { ok: true, filePath, format, characters: content.length };
+    } catch (error) {
+      return { ok: false, error: `写入文件失败：${error.message}` };
+    }
   });
 
   ipcMain.handle("clipboard:read-image", () => readClipboardImage());
@@ -1340,6 +1387,15 @@ async function captureScreenshots() {
     );
     await new Promise((resolve) => setTimeout(resolve, 250));
 
+    await mainWindow.webContents.executeJavaScript("document.getElementById('btnExport').click()");
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const exportImage = await mainWindow.webContents.capturePage();
+    const exportPath = out.replace(/\.png$/i, "-export.png");
+    fs.writeFileSync(exportPath, exportImage.toPNG());
+    console.log("[screenshot] wrote", exportPath);
+    await mainWindow.webContents.executeJavaScript("document.getElementById('btnExport').click()");
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
     const oldBounds = mainWindow.getBounds();
     const resized = clampBounds({
       x: oldBounds.x - 75,
@@ -1405,6 +1461,33 @@ async function runAutoImageTest() {
     console.log("[auto-image]", JSON.stringify(result), "wrote", out);
   } catch (error) {
     console.error("[auto-image] failed:", error);
+  } finally {
+    isQuitting = true;
+    app.quit();
+  }
+}
+
+async function runAutoExportTest() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  try {
+    await mainWindow.webContents.executeJavaScript("document.getElementById('btnExport').click()");
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    await mainWindow.webContents.executeJavaScript(
+      "document.querySelector('#exportMenu [data-export=\"copy\"]').click()",
+    );
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    const text = clipboard.readText();
+    console.log(
+      "[auto-export]",
+      JSON.stringify({
+        chars: text.length,
+        hasHeader: text.includes("PaperPet conversation export"),
+        hasQuestion: text.includes("为什么 VMD"),
+        hasImageData: text.includes("data:image"),
+      }),
+    );
+  } catch (error) {
+    console.error("[auto-export] failed:", error);
   } finally {
     isQuitting = true;
     app.quit();

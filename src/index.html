@@ -98,6 +98,10 @@
           <circle cx="8.5" cy="9" r="1.6" />
           <path d="m4 17 5-5 4 4 2-2 5 5" />
         </symbol>
+        <symbol id="i-export" viewBox="0 0 24 24">
+          <path d="M12 3v12M7.5 10.5 12 15l4.5-4.5" />
+          <path d="M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" />
+        </symbol>
         <symbol id="i-chevron" viewBox="0 0 24 24">
           <path d="m6 9 6 6 6-6" />
         </symbol>
@@ -115,6 +119,9 @@
           <div class="window-actions">
             <button id="btnPin" class="icon-btn" title="置顶" aria-label="置顶">
               <svg viewBox="0 0 24 24"><use href="#i-pin" /></svg>
+            </button>
+            <button id="btnExport" class="icon-btn" title="导出对话" aria-label="导出对话">
+              <svg viewBox="0 0 24 24"><use href="#i-export" /></svg>
             </button>
             <button id="btnCollapse" class="icon-btn" title="收成桌宠" aria-label="收成桌宠">
               <svg viewBox="0 0 24 24"><use href="#i-collapse" /></svg>
@@ -227,6 +234,19 @@
             </div>
           </div>
         </main>
+
+        <div id="exportMenu" class="export-menu" hidden>
+          <div class="export-menu-title">导出当前对话</div>
+          <button type="button" data-export="markdown">
+            <span>Markdown 文件</span><small>适合交给其他 agent / LLM</small>
+          </button>
+          <button type="button" data-export="json">
+            <span>JSON 文件</span><small>保留消息结构与元信息</small>
+          </button>
+          <button type="button" data-export="copy">
+            <span>复制 Markdown</span><small>直接粘贴到聊天框</small>
+          </button>
+        </div>
 
         <div class="resize-handle rh-n" data-edge="n"></div>
         <div class="resize-handle rh-s" data-edge="s"></div>

@@ -328,6 +328,69 @@ body.is-resizing * {
   stroke-linejoin: round;
 }
 
+.export-menu {
+  position: absolute;
+  top: 39px;
+  right: 12px;
+  z-index: 45;
+  width: 210px;
+  padding: 5px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--paper-raised);
+  box-shadow: 0 14px 34px rgba(34, 48, 58, 0.2);
+  -webkit-app-region: no-drag;
+  animation: menu-in 0.14s ease both;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.export-menu-title {
+  padding: 5px 8px 4px;
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.export-menu button {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+  color: var(--ink);
+}
+
+.export-menu button:hover {
+  background: var(--blue-soft);
+}
+
+.export-menu button span {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.export-menu button small {
+  font-size: 8px;
+  color: var(--ink-faint);
+}
+
 /* ---------- content ---------- */
 .content {
   flex: 1;

@@ -40,6 +40,8 @@
     petStatusText: $("petStatusText"),
     petBubble: $("petBubble"),
     btnPin: $("btnPin"),
+    btnExport: $("btnExport"),
+    exportMenu: $("exportMenu"),
     btnCollapse: $("btnCollapse"),
     btnSettings: $("btnSettings"),
     btnHide: $("btnHide"),
@@ -570,6 +572,66 @@
         document.execCommand("copy");
       } catch (e) {}
       area.remove();
+    }
+  }
+
+  /* ---------------- export ---------------- */
+
+  function closeExportMenu() {
+    els.exportMenu.hidden = true;
+    els.btnExport.classList.remove("is-on");
+  }
+
+  function toggleExportMenu() {
+    const open = els.exportMenu.hidden;
+    els.exportMenu.hidden = !open;
+    els.btnExport.classList.toggle("is-on", open);
+  }
+
+  function exportMessages() {
+    return state.messages
+      .filter((message) => !message.meta?.welcome && !message.local)
+      .filter((message) => String(message.content || "").trim() || message.error)
+      .map((message) => ({
+        role: message.role,
+        content: message.content,
+        createdAt: message.createdAt,
+        image: Boolean(message.image),
+        error: message.error || "",
+        reasoning: message.reasoning || "",
+        meta: message.meta || null,
+      }));
+  }
+
+  async function exportConversation(format, copy = false) {
+    const messages = exportMessages();
+    if (!messages.length) {
+      closeExportMenu();
+      toast("当前还没有可导出的问答");
+      return;
+    }
+    const paper = currentPaper();
+    const date = new Date().toISOString().slice(0, 10);
+    const title = paper?.title || "conversation";
+    try {
+      const result = await api.exportConversation({
+        format,
+        copy,
+        paper: paper || null,
+        messages,
+        defaultName: `PaperPet-${title}-${date}`,
+      });
+      closeExportMenu();
+      if (result?.copied) {
+        toast("已复制 Markdown 到剪贴板");
+      } else if (result?.ok) {
+        toast(`已导出：${result.filePath}`, 4200);
+      } else if (!result?.canceled) {
+        toast(result?.error || "导出失败", 3600);
+      }
+    } catch (error) {
+      closeExportMenu();
+      toast(`导出失败：${error.message || error}`, 3600);
     }
   }
 
@@ -1233,6 +1295,21 @@
       updatePinState();
       toast(next ? "已置顶" : "已取消置顶");
     });
+    els.btnExport.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleExportMenu();
+    });
+    els.exportMenu.addEventListener("click", (event) => event.stopPropagation());
+    els.exportMenu.querySelectorAll("button[data-export]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const value = button.dataset.export;
+        if (value === "copy") exportConversation("markdown", true);
+        else exportConversation(value, false);
+      });
+    });
+    document.addEventListener("click", () => {
+      if (!els.exportMenu.hidden) closeExportMenu();
+    });
     els.btnCollapse.addEventListener("click", () => api.setMode(true));
     els.btnHide.addEventListener("click", () => api.hide());
     els.btnSettings.addEventListener("click", () => openSettings());
@@ -1364,12 +1441,17 @@
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        if (state.settingsOpen) closeSettings();
+        if (!els.exportMenu.hidden) closeExportMenu();
+        else if (state.settingsOpen) closeSettings();
         else if (state.stream) abortStream();
       }
       if ((event.ctrlKey || event.metaKey) && event.key === ",") {
         event.preventDefault();
         openSettings();
+      }
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "e") {
+        event.preventDefault();
+        toggleExportMenu();
       }
     });
 

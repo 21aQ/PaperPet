@@ -31,6 +31,7 @@
     "shot": "electron . --no-sandbox --demo --screenshot",
     "build:plugin": "node scripts/build-plugin.mjs",
     "package": "node scripts/package.mjs",
+    "test": "node --test test/context.test.js test/exporter.test.js",
     "test:context": "node --test test/context.test.js"
   },
   "engines": {

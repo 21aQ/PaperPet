@@ -11,6 +11,7 @@ function subscribe(channel, callback) {
 contextBridge.exposeInMainWorld("paperpet", {
   getState: () => ipcRenderer.invoke("app:get-state"),
   readClipboardImage: () => ipcRenderer.invoke("clipboard:read-image"),
+  exportConversation: (payload) => ipcRenderer.invoke("conversation:export", payload),
   refreshBridge: () => ipcRenderer.invoke("bridge:refresh"),
   send: (payload) => ipcRenderer.invoke("chat:send", payload),
   abort: (requestId) => ipcRenderer.invoke("chat:abort", requestId),
